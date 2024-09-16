@@ -3,7 +3,7 @@
 
 **Scenario**
 
-As a junior data analyst on the marketing team at Cyclistic, a Chicago-based bike-share company, I'm tasked with helping to increase annual memberships. Our marketing director believes this is crucial to the company's future success. To achieve this, we're analyzing the differences in usage patterns between casual riders and annual members. Based on these insights, we'll develop a new marketing strategy aimed at converting casual riders. However, before implementing these changes, we must present compelling data-driven insights and visualizations to gain executive approval
+As a junior data analyst on the marketing team at Cyclistic, a Chicago-based bike-share company, I'm tasked with helping to increase annual memberships. Our marketing director believes this is crucial to the company's future success. To achieve this, we're analyzing the differences in usage patterns between casual riders and annual members. Based on these insights, we'll develop a new marketing strategy to convert casual riders. However, before implementing these changes, we must present compelling data-driven insights and visualizations to gain executive approval
 
 **Business Task**
 
@@ -27,6 +27,7 @@ The analysis utilizes data from Cyclistic bike-share rides made available by Mot
 ## Analysis 
 
 **Methodology**
+
 The detailed methodology of this analysis can be found in [HTML report](https://oluwadunni1.github.io/legendary-invention/Cyclistic.html)
 
 **Key Findings**
