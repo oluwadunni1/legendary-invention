@@ -16,7 +16,7 @@ The primary objective of this analysis is to:
 The analysis utilizes data from Cyclistic bikeshare rides made available by Motivate International Inc. The data contains Cyclistics historical trip data organized quarterly from `January 2019` - `March 2020`. It includes :
 * Rider Details: Duration, start and end times, and ride types
 * User Information: Membership type(annual or casual)
-* Additional data: Station Ids, day of the week, and ride frequency
+* Additional data: Station IDs, day of the week, and ride frequency
 
 **Methodology**
-The detailed methodology of this analysis can be found in [HTML report]()
+The detailed methodology of this analysis can be found in [HTML report](https://oluwadunni1.github.io/legendary-invention/Cyclistic.html)
