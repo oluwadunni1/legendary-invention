@@ -1,0 +1,294 @@
+---
+title: "Cyclistic's Bike-share Analysis"
+author: "Oluwadunni"
+date: "2024-09-11"
+output: html_document
+---
+
+
+### Setting up my environment
+
+Setting my R environment by loading the `tidyverse` and `conflicted` packages:
+
+```{r load tidyverse, echo=TRUE, message=FALSE, warning=FALSE}
+library(tidyverse)
+
+```
+
+```{r load conflicted}
+library(conflicted)
+```
+
+**Managing conflicted packages**
+
+Set `dplyr::filter` and `dplyr::lag` as the default choices
+
+```{r manage conflicts, echo=TRUE, message=FALSE, warning=FALSE, paged.print=TRUE}
+conflict_prefer("filter", "dplyr")
+conflict_prefer("lag", "dplyr")
+```
+
+### Import Divy datasets
+Notes: Importing dataframe for each quarter from `January2019` - `March 2020`
+```{r import dataset, message=FALSE, warning=FALSE}
+q1_2019 <- read_csv("Divvy_Trips_2019_Q1 - Divvy_Trips_2019_Q1.csv")
+q2_2019 <- read_csv("Divvy_Trips_2019_Q2.csv")
+q3_2019 <- read_csv("Divvy_Trips_2019_Q3.csv")
+q4_2019 <- read_csv("Divvy_Trips_2019_Q4.csv")
+q1_2020 <- read_csv("Divvy_Trips_2020_Q1 - Divvy_Trips_2020_Q1.csv")
+
+```
+
+## Dataframe cleaning and merging into a single file 
+
+**Observing column names**
+```{r observing column names}
+colnames(q1_2019)
+colnames(q2_2019)
+colnames(q3_2019)
+colnames(q4_2019)
+colnames(q1_2020)
+```
+**Renaming columns for consistency**
+
+```{r rename colums, message=FALSE, warning=FALSE}
+(q1_2019 <- rename(q1_2019
+                   ,ride_id = trip_id
+                   ,rideable_type = bikeid
+                   ,started_at = start_time
+                   ,ended_at = end_time
+                   ,start_station_name = from_station_name
+                   ,start_station_id = from_station_id
+                   ,end_station_name = to_station_name
+                   ,end_station_id = to_station_id
+                   ,member_casual = usertype
+))
+(q2_2019 <- rename(q2_2019
+                   ,ride_id = `01 - Rental Details Rental ID`
+                   ,rideable_type = `01 - Rental Details Bike ID`
+                   ,started_at = `01 - Rental Details Local Start Time`
+                   ,ended_at = `01 - Rental Details Local End Time`
+                   ,start_station_name = `03 - Rental Start Station Name`
+                   ,end_station_name = `02 - Rental End Station Name`
+                   ,end_station_id = `02 - Rental End Station ID`
+                   ,member_casual = `User Type`
+                   ,start_station_id = `03 - Rental Start Station ID`
+))
+(q3_2019 <- rename(q3_2019
+                   ,ride_id = trip_id
+                   ,started_at = start_time
+                   ,ended_at = end_time
+                   ,rideable_type = bikeid
+                   ,start_station_id = from_station_id
+                   ,start_station_name = from_station_name
+                   ,end_station_name = to_station_name
+                   ,member_casual = usertype
+                   ,end_station_id = to_station_id
+))
+(q4_2019 <- rename(q4_2019
+                   ,ride_id = trip_id
+                   ,started_at = start_time
+                   ,ended_at = end_time
+                   ,rideable_type = bikeid
+                   ,start_station_id = from_station_id
+                   ,start_station_name = from_station_name
+                   ,end_station_name = to_station_name
+                   ,member_casual = usertype
+                   ,end_station_id = to_station_id
+))
+```
+
+**Inspecting dataframes for inconsistencies**
+
+```{r inspect dataframes, message=FALSE, warning=FALSE}
+str(q1_2019)
+str(q2_2019)
+str(q3_2019)
+str(q4_2019)
+str(q1_2020)
+```
+
+**Convert data types for consistency**
+
+```{r convert data types}
+q1_2019 <-  mutate(q1_2019, ride_id = as.character(ride_id)
+                   ,rideable_type = as.character(rideable_type)
+                   ,started_at = as.POSIXct(started_at, format = "%Y-%m-%d %H:%M:%S", tz = "UTC")
+                   ,ended_at = as.POSIXct(ended_at, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"))
+q2_2019 <-  mutate(q2_2019, ride_id = as.character(ride_id)
+                   ,rideable_type = as.character(rideable_type)
+                   ,started_at = as.POSIXct(started_at, format = "%Y-%m-%d %H:%M:%S", tz = "UTC")
+                   ,ended_at = as.POSIXct(ended_at, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"))
+
+q3_2019 <-  mutate(q3_2019, ride_id = as.character(ride_id)
+                   ,rideable_type = as.character(rideable_type)
+                   ,started_at = as.POSIXct(started_at, format = "%Y-%m-%d %H:%M:%S", tz = "UTC")
+                   ,ended_at = as.POSIXct(ended_at, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"))
+
+q4_2019 <- mutate(q1_2019, ride_id = as.character(ride_id)
+                  ,rideable_type = as.character(rideable_type)
+                  ,started_at = as.POSIXct(started_at, format = "%Y-%m-%d %H:%M:%S", tz = "UTC")
+                  ,ended_at = as.POSIXct(ended_at, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"))
+q1_2020 <- mutate(q1_2020, started_at= as.POSIXct(started_at, format = "%Y-%m-%d %H:%M:%S", tz = "UTC")
+                  ,ended_at = as.POSIXct(ended_at, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"))
+```
+
+**Merge individual quarter's dataframe into one single dataframe**
+
+```{r cache=FALSE}
+all_trips <- bind_rows(q1_2019, q2_2019, q3_2019, q4_2019, q1_2020)
+```
+
+**Inspect columns of new data frame**
+
+```{r}
+colnames(all_trips)
+```
+
+**Remove discontinued fields from data frame**
+
+Notes: Remove fields that were dropped such as Gender, start_lng .....
+
+```{r}
+all_trips <- all_trips %>%  
+  select(-c(start_lat, start_lng, end_lat, end_lng, birthyear, gender,  tripduration, `01 - Rental Details Duration In Seconds Uncapped`, `05 - Member Details Member Birthday Year`, `Member Gender`  ))
+```
+
+**Inspecting new frame that has been created**
+
+```{r}
+colnames(all_trips)
+```
+**Retrieve Dimension for new data frame** 
+```{r}
+dim(all_trips)
+```
+**Generate data set summary**
+```{r}
+summary(all_trips)
+```
+**Preview first and last rows of dataset**
+```{r}
+head(all_trips)
+tail(all_trips)
+```
+**Distribution of membership types**
+```{r}
+table(all_trips$member_casual)
+
+```
+
+**Reassign desired values in `member_casual` column**
+
+```{r reassign }
+all_trips <-  all_trips %>% 
+  mutate(member_casual = recode(member_casual
+                                ,"Subscriber" = "member"
+                                ,"Customer" = "casual"))
+
+```
+
+**Add columns to dataframe**
+
+Note: Add columns that list the date, month, day, and year of each ride
+
+```{r add columns}
+all_trips$date <- as.Date(all_trips$started_at) 
+all_trips$month <- format(as.Date(all_trips$date), "%m")
+all_trips$day <- format(as.Date(all_trips$date), "%d")
+all_trips$year <- format(as.Date(all_trips$date), "%Y")
+all_trips$day_of_week <- format(as.Date(all_trips$date), "%A")
+
+```
+
+**Add a calculated field to the dataframe**
+
+Note: Add `ride length` to calculate the duration for each trip in seconds
+
+```{r add ride length}
+all_trips$ride_length <- difftime(all_trips$ended_at,all_trips$started_at)
+
+```
+
+**Remove bad data**
+
+Note: Remove observations where `ride_length` was negative or where bikes were taken out for maintenance
+
+```{r}
+all_trips_v2 <- all_trips[!(all_trips$start_station_name == "HQ QR" | all_trips$ride_length<0),]
+
+```
+
+### Descriptive analysis on `ride_length`
+
+Notes: All figures are in seconds
+
+**Straight average of all trips(total ride length / rides)**
+
+```{r Mean}
+mean(all_trips_v2$ride_length) 
+
+```
+
+**Median (midpoint number in the ascending array of ride lengths)**
+
+```{r Median}
+median(all_trips_v2$ride_length)
+```
+
+**Longest ride**
+
+```{r Max trip}
+max(all_trips_v2$ride_length)
+```
+
+**Shortest ride**
+
+```{r Min trip}
+min(all_trips_v2$ride_length)
+```
+
+**Compare members and casual users**
+
+Notes: Calculations for mean, median,max and min for each membertype 
+```{r average rides grouped by member type}
+all_trips_v2 %>% 
+  group_by(member_casual) %>%
+  summarize(mean_ride_length = mean(ride_length), median_ride_length = median(ride_length), min_ride_length = min(ride_length), max_ride_length = max(ride_length))
+```
+**Organize ``day_of_week` column**
+
+```{r}
+all_trips_v2$day_of_week <- ordered(all_trips_v2$day_of_week, levels=c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
+
+```
+**Average ride time by each day for members vs casual users**
+
+```{r}
+all_trips_v2 %>% 
+  group_by(member_casual, day_of_week) %>% 
+  summarise(mean_ride_length = mean(ride_length))
+```
+
+**Analyze ridership data by type and `day_of the week`**
+```{r} 
+all_trips_v2 %>%
+  group_by(member_casual, day_of_week) %>% 
+  summarise(number_of_rides = n()
+            ,average_duration = mean(ride_length)) %>% 
+  arrange(member_casual, day_of_week)		
+  
+```
+## Visualization
+**Visual to compare average ride_length for member type**
+```{r visuals}
+all_trips_v2 %>% 
+  group_by(member_casual, day_of_week) %>% 
+  summarise(mean_ride_length = mean(ride_length)) %>% 
+  arrange(member_casual, day_of_week)  %>% 
+  ggplot(aes(x = day_of_week, y = mean_ride_length, fill = member_casual)) +
+  geom_col(position = "dodge")+
+  labs(title = "Ride Length by Membership and Day", subtitle ="A Comparative Analysis of Ride Durations", caption = ("Data from January 2019 - March 2020"), x = "Day of week", y = "Average ride length(secs)", fill = "Membership Type")
+  
+```
+
