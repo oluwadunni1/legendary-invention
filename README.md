@@ -37,7 +37,7 @@ The detailed methodology of this analysis can be found in [HTML report](https://
 
 **Recommendations**
 Based on the above findings, the following strategies are recommended:
-* The business could design marketing strategies around the weekend leisure riding behavior of casual riders. They could promote special offers for converting casual riders into members by highlighting the benefits of membership for weekend and leisure activities
-* They could also introduce flexible membership plans such as a weekend only pass that provides a stepping stone toward a full annual membership for casual riders.
-* Cyclistic can introduce member-only perks on peak days(Thursdays and Fridays) to allure casual riders to convert. These perks could be guaranteed early access to bikes on busy days or exclusive bike models for members 
+* The business could design marketing strategies around casual riders' weekend leisure riding behavior. They could promote special offers for converting casual riders into members by highlighting the benefits of membership for weekend and leisure activities
+* They could introduce flexible membership plans such as a weekend-only pass that provides a stepping stone toward a full annual membership for casual riders.
+* The business can introduce member-only perks on peak days(Thursdays and Fridays) to lure casual riders to convert. These perks could be guaranteed early access to bikes on busy days or exclusive bike models for members 
   
