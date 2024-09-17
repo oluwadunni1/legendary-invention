@@ -28,7 +28,7 @@ The analysis utilizes data from Cyclistic bike-share rides made available by Mot
 
 **Methodology**
 
-The detailed methodology of this analysis can be found in [HTML report](https://oluwadunni1.github.io/legendary-invention/Cyclistic.html)
+The detailed methodology of this analysis can be found in [HTML report](https://oluwadunni1.github.io/legendary-invention/Cyclistic_v2.html)
 
 **Key Findings**
 * Casual riders have a significantly longer average ride length every day of the week compared to annual members suggesting that casual riders tend to use the bikes for longer, more leisurely rides while annual members may use them for shorter, routine trips such as commuting
